@@ -1,0 +1,12 @@
+Package: sphere
+Type: Package
+Title:  Some functions for handling 3D point cloud data.
+Version: 1.0
+Date: 2015-01-26
+Author: Tuomas Rajala
+Maintainer: Tuomas Rajala <tuomas.rajala@iki.fi>
+Description: Functions for handling 3D data: Spherical coordinate transformations,
+ rotation representations, random sampling, ellipsoid fitting, various plotting, etc.
+License: GPL
+Depends: Rcpp
+LinkingTo: Rcpp
