@@ -3,10 +3,12 @@
 \alias{ellipsoid_OLS}
 \title{OLS fitting of an ellipsoid to d-dimensional point cloud}
 \usage{
-ellipsoid_OLS(x)
+ellipsoid_OLS(x, origin = FALSE)
 }
 \arguments{
 \item{x}{point coordinate matrix}
+
+\item{origin}{Fix center of the ellipsoid to origin?}
 }
 \description{
 OLS fitting of an ellipsoid to d-dimensional point cloud
