@@ -2,20 +2,27 @@
 #' 
 #' @exportMethod persp
 #' @export
-persp.ellipsoid <- function(x, add=FALSE, theta=25, phi=30, expand=.9, pmat, ...){
-  L <- c(-1,1)*max(x$semi_axes) * 1
-  if(!add){
-    pmat <- persp(L, L, matrix(,2,2), 
-                xlim=L, ylim=L, zlim=L,
-                theta=theta, phi=phi, expand=expand , 
-                xlab="X", ylab="Y", zlab="Z", 
-                box=TRUE, ticktype="simple", shade=FALSE)
-  }else 
-    if(missing(pmat)) 
-      stop("Need to provide 'pmat'-projection matrix for adding to persp-plot.")
-  #'
-  add_ellipsoid2persp(x=x, pmat=pmat, ...)
-  #
+persp.ellipsoid <- function(x, add=FALSE, theta=25, phi=30, expand=.9, triptych=FALSE, pmat, ...){
+  if(triptych){
+   a <- c(90, 180, 0)
+   b <- c(0, 0,90)
+   for(i in 1:3) pmat <- persp.ellipsoid(x, add, theta=a[i], phi=b[i], expand, triptych=FALSE, pmat, ...)
+  }
+  else{
+    L <- c(-1,1)*max(x$semi_axes) * 1
+    if(!add){
+      pmat <- persp(L, L, matrix(,2,2), 
+                  xlim=L, ylim=L, zlim=L,
+                  theta=theta, phi=phi, expand=expand , 
+                  xlab="X", ylab="Y", zlab="Z", 
+                  box=TRUE, ticktype="simple", shade=FALSE)
+    }else 
+      if(missing(pmat)) 
+        stop("Need to provide 'pmat'-projection matrix for adding to persp-plot.")
+    #'
+    add_ellipsoid2persp(x=x, pmat=pmat, ...)
+    #
+  }
   invisible(pmat)
 }
 

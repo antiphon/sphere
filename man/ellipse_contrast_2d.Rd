@@ -3,7 +3,7 @@
 \alias{ellipse_contrast_2d}
 \title{Testing contrast for ellipses}
 \usage{
-ellipse_contrast_2d(els, out = FALSE)
+ellipse_contrast_2d(els, out = TRUE)
 }
 \description{
 Give this to confint.ellipsoid to compute the contrast for

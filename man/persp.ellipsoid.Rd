@@ -4,7 +4,7 @@
 \title{Perspective plot of an ellipsoid in 3d}
 \usage{
 \method{persp}{ellipsoid}(x, add = FALSE, theta = 25, phi = 30,
-  expand = 0.9, pmat, ...)
+  expand = 0.9, triptych = FALSE, pmat, ...)
 }
 \description{
 Perspective plot of an ellipsoid in 3d

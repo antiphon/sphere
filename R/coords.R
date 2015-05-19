@@ -123,11 +123,37 @@ aziinc2rotationMatrix <- function(rot_ai=c(0,0)){
 #' 
 #' @export
 rotationMatrix2quaternion <- function(R){
-  q4 <- 0.5 * sqrt(1+R[1,1] + R[2,2] + R[3,3])
-  m <- 1/(4*q4)
-  q1 <- m * (R[3,2]-R[2,3])
-  q2 <- m * (R[1,3]-R[3,1])
-  q3 <- m * (R[2,1]-R[1,2])
+  q4 <- 0.5 * sqrt(1 + R[1,1] + R[2,2] + R[3,3])
+  if(is.na(q4)) q4<-0 # improper rotation
+  if(q4 < 1e-5){ # try other way
+    q1 <- 0.5 * sqrt(1+R[1,1]-R[2,2]-R[3,3])
+    if(q1 < 1e-5){ # try other way
+      q2 <- 0.5 * sqrt(1-R[1,1]+R[2,2]-R[3,3])
+      if(q2 < 1e-5){
+        q3 <- 0.5 * sqrt(1-R[1,1]-R[2,2]+R[3,3])
+        if(q3 < 1e-5) stop("Can't convert matrix to quaternion.")
+        m <- 1/(4*q3) # q3 ok
+        q1 <- m * (R[3,1]+R[1,3])
+        q2 <- m * (R[3,2]+R[2,3])
+        q4 <- m * (R[2,1]-R[1,2])
+      }else{ # q2 ok
+        m <- 1/(4*q2)
+        q1 <- m * (R[2,1]+R[1,2])
+        q3 <- m * (R[3,2]+R[2,3])
+        q4 <- m * (R[1,3]-R[3,1])
+      }
+    }else{ # q1 ok 
+      m <- 1/(4*q1)
+      q2 <- m * (R[1,2]+R[2,1])
+      q3 <- m * (R[1,3]+R[3,1])
+      q4 <- m * (R[3,2]-R[2,3])
+    }
+  }else{ # q4 ok
+    m <- 1/(4*q4)
+    q1 <- m * (R[3,2]-R[2,3])
+    q2 <- m * (R[1,3]-R[3,1])
+    q3 <- m * (R[2,1]-R[1,2])
+  }
   c(q1,q2,q3,q4)
 }
 
@@ -142,7 +168,7 @@ quaternion2rotationMatrix <- function(q){
 
 #' Quaternion to Euler axis/angle
 #' @export
-quaternion2EulerAxis <- function(q){
+quaternion2Euler <- function(q){
   e <- q[-4]/sqrt(sum(q[-4]^2))
   theta <- 2 * acos(q[4])
   c(e=e, theta=theta)
@@ -153,7 +179,7 @@ quaternion2EulerAxis <- function(q){
 #' @param euler c(e1,e2,e3,angle) where e* is the unit axis of rotation
 #' 
 #' @export
-EulerAxis2quaternion <- function(euler){
+Euler2quaternion <- function(euler){
   theta <- euler[4]
   m <- sin(theta/2)
   c(q=euler[1:3]*m, q4=cos(theta/2))
@@ -191,6 +217,66 @@ EulerAngles2quaternion <- function(angle){
   q3 <- ss[1]*cc[2]*cc[3] + cc[1]*ss[2]*ss[3]
   q4 <- cc[1]*ss[2]*cc[3] - ss[1]*cc[2]*ss[3]
   c(q1,q2,q3,q4)
+}
+
+
+#' Rotation matrix (prop or improp) to Euler axis-angle
+#' 
+#' @export
+rotationMatrix2Euler <- function(R){ 
+  e <- det(R)
+  Tr <- sum(diag(R))
+  a <- 3-e*Tr
+  b <- 1+e*Tr
+  if(a==0){ 
+    theta <- acos(e)
+    n <- c(1,0,0)
+  }
+  else if(b==0){
+    theta <- acos(-e)
+    eR <- e*R
+    e1 <- e2 <- e3 <- 1
+    n1 <- sqrt(1+eR[1,1])
+    n2 <- sqrt(1+eR[2,2])
+    n3 <- sqrt(1+eR[3,3])
+    if(n1){
+      if(n2) e2 <- eR[1,2]/(n1*n2)
+      if(n3) e3 <- eR[1,3]/(n1*n3)
+    }else{
+      if(n2 & n3) e2 <- e3 <- eR[2,3]/(n2*n3)
+    }
+    n <- c(n1,n2,n3)*c(e1,e2,e3)
+    n <- n/sum(n)
+  }
+  else{
+    theta <- acos(0.5 * (Tr-e))
+    n <-  c(R[3,2]-R[2,3], R[1,3]-R[3,1], R[2,1]-R[1,2]) /sqrt(a*b)
+  }
+  v <- c(axis=n, angle=theta)
+  if(e < 0) attr(v, "proper") <- FALSE
+  v
+}
+
+#' Euler axis-angle to Rotation matrix
+#' 
+#' @export
+Euler2rotationMatrix <- function(v, proper=TRUE){
+  n <- v[1:3]
+  a <- v[4]
+  co <- cos(a)
+  si <- sin(a)
+  if(proper){
+    r1 <- c(co + n[1]^2*(1-co), n[1]*n[2]*(1-co)-n[3]*si, n[1]*n[3]*(1-co)+n[2]*si)
+    r2 <- c(n[1]*n[2]*(1-co)+n[3]*si, co+n[2]^2*(1-co), n[2]*n[3]*(1-co)-n[1]*si)
+    r3 <- c(n[1]*n[3]*(1-co)-n[2]*si, n[2]*n[3]*(1-co)+n[1]*si, co+n[3]^2*(1-co))
+  } else{
+    r1 <- c(co - n[1]^2*(1+co), -n[1]*n[2]*(1+co)-n[3]*si, -n[1]*n[3]*(1+co)+n[2]*si)
+    r2 <- c(-n[1]*n[2]*(1+co)+n[3]*si, co-n[2]^2*(1+co), -n[2]*n[3]*(1+co)-n[1]*si)
+    r3 <- c(-n[1]*n[3]*(1+co)-n[2]*si, -n[2]*n[3]*(1+co)+n[1]*si, co-n[3]^2*(1+co))  
+  }
+  
+  R <- rbind(r1, r2, r3)
+  unname(R)
 }
 
 #' Rotation matrix to Euler angles

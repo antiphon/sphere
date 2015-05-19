@@ -3,7 +3,8 @@
 \alias{plot.ellipsoid}
 \title{Plot an ellipsoid}
 \usage{
-\method{plot}{ellipsoid}(x, add = TRUE, persp3d = FALSE, res = 201, ...)
+\method{plot}{ellipsoid}(x, add = TRUE, persp3d = FALSE, res = 201,
+  scale = 1, ...)
 }
 \description{
 Plot an ellipsoid

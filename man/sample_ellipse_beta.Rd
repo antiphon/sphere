@@ -3,7 +3,7 @@
 \alias{sample_ellipse_beta}
 \title{Sample from the OLS estimate of the beta parameters}
 \usage{
-sample_ellipse_beta(x, nsim = 100, tol = 0.001)
+sample_ellipse_beta(x, nsim = 100, tol = 0, maxiter = 5000)
 }
 \description{
 Sample from the OLS estimate of the beta parameters

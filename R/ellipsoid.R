@@ -28,7 +28,7 @@ rellipsoid <- function(n, axes=c(1,1,1), noise=0, R=NULL){
 ellipsoid_OLS  <- function(x, origin=FALSE) {
   n <- nrow(x)
   d <- ncol(x)
-  if(n < 3) stop("Trying to fit an ellipsoid to less than 3 points.")
+  if(n < 3+d) stop("Trying to fit an ellipsoid to too little amount of points.")
   D  <- matrix(2, ncol=d, nrow=d)
   diag(D) <- 1
   D <- D[upper.tri(D,T)]
@@ -44,6 +44,8 @@ ellipsoid_OLS  <- function(x, origin=FALSE) {
   nd <- (d*(d+1)/2)
   nb <- nd + (d * !origin) + 1 
   H <- diag(1, nb)
+  #if(d==2) H[2,2]<-sqrt(2) else H[cbind(c(2,4,5),c(2,4,5))] <- sqrt(2)
+  
   Hi <- solve(H)
   # svd
   USV <- svd(Y%*%Hi)
@@ -105,12 +107,18 @@ ellipsoid_OLS  <- function(x, origin=FALSE) {
 #' @export
 summary.ellipsoid <- function(x, ...){
   print(x)
-  angtxt <- ifelse(x$dim==2, format(x$rot_angle), paste(c("heading", "attitude", "bank"), format(x$rot_angle), collapse=" "))
-
+  ang <- round(x$rot_angle, 3)
+  angd <- round(x$rot_angle * 180/pi, 1)
+  semi_axes <- x$semi_axes
+  semi_axes_rel <- round(semi_axes/semi_axes[1], 3)
+  angtxt <- ifelse(x$dim==2, format(ang), paste(c("heading", "attitude", "bank"), format(ang), collapse=" "))
+  angtxtd <- ifelse(x$dim==2, format(angd), paste(c("heading", "attitude", "bank"), format(angd), collapse=" "))
   cat("\nEstimates:\n Center:\t \t ", paste0("(", paste0(format(x$center), collapse=", "), ")\n"))
-  cat(" Semi-axes lengths:\t ", paste0(format(x$semi_axes), collapse=" : "), "\n")
+  cat(" Semi-axes lengths (absolute):\t ", paste0(format(semi_axes), collapse=" : "), "\n")
+  cat(" Semi-axes lengths (relative):\t ", paste0(format(semi_axes_rel), collapse=" : "), "\n")
   
   cat(" Rotation angles (rad):\t ", angtxt,"\n")
+  cat(" Rotation angles (deg):\t ", angtxtd,"\n")
   cat(" Error variance: \t ", x$ols_fit$s2, "\n")
   invisible(NULL)
 }
@@ -125,7 +133,7 @@ summary.ellipsoid <- function(x, ...){
 #' @exportMethod confint
 #' @import mvtnorm
 #' @export
-confint.ellipsoid <- function(x, fun, nsim=1000, probs=c(0.025, 0.975), tol=1e-4, ...){
+confint.ellipsoid <- function(x, fun, nsim=1000, probs=c(0.025, 0.975),  ...){
   S <- x$ols_fit$varcov
   m <- x$ols_fit$beta_est
   f <- qt(0.975, x$ndata-2)
@@ -137,7 +145,7 @@ confint.ellipsoid <- function(x, fun, nsim=1000, probs=c(0.025, 0.975), tol=1e-4
   df_orig <- data.frame(mean=m, median=m, sd=s, L,U, p=pval)
   # simulate a bunch for semi_axes and rotations
   
-  betas <- sample_ellipse_beta(x, nsim, tol=1e-4)
+  betas <- sample_ellipse_beta(x, nsim, ...)
   
   
   efs <- apply(betas, 1, function(b) ellipse_form(b, x$dim) )
@@ -155,19 +163,20 @@ confint.ellipsoid <- function(x, fun, nsim=1000, probs=c(0.025, 0.975), tol=1e-4
   # basics for axes
   df_axes <- t(apply(axes, 2, e))
   #
-  df_fun <- df_ex <- NULL
+  df_fun <- df_ex <- df_diff <- NULL
   if(x$dim==2){
     # eccentricity
     df_ex <- e(sqrt(1-(axes[,1]/axes[,2])^2 )) # eccentricity
     df_ex[6] <- NA # these p-values are not correct
-  }
-  if(!missing(fun)) { # custom function
-    df_fun <- e(fun(efs))
+    # custom function
+    if(missing(fun))
+      df_diff <- e(ellipse_contrast_2d(efs))
   }
   
+  if(!missing(fun)) df_fun <- e(fun(efs))
   
   names(df_orig) <- colnames(df_axes)
-  rbind(beta=df_orig, axes=df_axes, eccentricity=df_ex, custom=df_fun)
+  rbind(beta=df_orig, axes=df_axes, eccentricity=df_ex, isotropy=df_diff, custom=df_fun)
 }
 
 
@@ -176,11 +185,11 @@ confint.ellipsoid <- function(x, fun, nsim=1000, probs=c(0.025, 0.975), tol=1e-4
 #' 
 #' @exportMethod plot
 #' @export
-plot.ellipsoid <- function(x, add=TRUE, persp3d=FALSE, res=201,...){
+plot.ellipsoid <- function(x, add=TRUE, persp3d=FALSE, res=201, scale=1, ...){
   if(x$dim==2){
     a <- c(seq(0, 2*pi, length=res))
     y <- cbind(cos(a),sin(a))
-    z <- y * predict(x, y)
+    z <- y * predict(x, y) * scale
     lines(z, ...)
   }
   else{
@@ -241,66 +250,6 @@ print.ellipsoid <- function(x, ...){
   else cat(type, "fitted to", x$n, "points.\n")
 }
 
-
-#############################################################
-#' Mean ellipsoid using quaternion average
-#' @export
-mean_ellipsoids_quat <- function(x, ...){
-  # average ellipsoid using average quaternion
-  
-  if(!is.list(x)) stop("x needs to be a list of ellipsoids.")
-  if(!all(sapply(x, class)=="ellipsoid")) stop("x needs to be a list of ellipsoids.")
-  
-  d <- x[[1]]$dim
-  
-  semis <- sapply(x, getElement, "semi_axes")
-  quats <- sapply(lapply(x, getElement, "rot"), rotationMatrix2quaternion)
-  cents <- sapply(x, getElement, "center")
-  
-  # average
-  semi <- rowMeans(semis, na.rm=TRUE)
-  rot <- quaternion2rotationMatrix(c( rowMeans(quats, na.rm=TRUE)) )
-  M <- rot%*%diag(semi)
-  center <- rowMeans(cents, na.rm=TRUE)
-  angles <- NULL
-  if(d==2) {
-    f <- rot %*% c(1,0)
-    angles <- atan2(f[2],f[1])
-  }else if(d==3){
-    angles <- rotationMatrix2EulerAngles(rot)
-  }
-  
-  ave <- list(M=M, rot=rot, semi_axes=semi, center=center, ndata=NA, dim=d, 
-              rot_angle=angles, ave=1, nellipses=length(x))
-  class(ave) <- "ellipsoid"
-  ave
-}
-
-#############################################################
-#' Mean ellipsoid using empirical mean 
-#' @export
-mean_ellipsoids <- function(x, nsim=100, ...){
-  # average ellipsoid using sampling
-  
-  if(!is.list(x)) stop("x needs to be a list of ellipsoids.")
-  if(!all(sapply(x, class)=="ellipsoid")) stop("x needs to be a list of ellipsoids.")
-  
-  d <- x[[1]]$dim
-  # generate "data"
-  ok <- sapply(x, getElement, "valid")
-  dats <- lapply(x[ok], function(e) with(e, rellipsoid(n=nsim , axes=semi_axes, R=rot)))
-  dats <- do.call(rbind, dats)
-  # fit
-  ave <- ellipsoid_OLS(dats, ...)
-  ave$ndata <- nrow(dats)
-  ave$ave <- 1
-  ave$nellipses <- sum(ok)
-  ave$nsim <- nsim
-  ave
-}
-
-
-
 ####################################################################
 #' Ellipse center and matrix from general parameter form
 #' 
@@ -349,6 +298,11 @@ ellipse_solve_rota <- function(A){
   }
   axes_len <- 1/sqrt(ev$value) # the semi-axes lengths
   R <- ev$vector # this holds the rotation...
+  # check proper
+#   if(det(R)<0){
+#     # mirror
+#     R <- Euler2rotationMatrix(rotationMatrix2Euler(R))
+#   }
   list(axes=axes_len, R=R)
 }
 
@@ -358,23 +312,29 @@ ellipse_solve_rota <- function(A){
 #'
 #' @import mvtnorm 
 #' @export
-sample_ellipse_beta <- function(x, nsim=100, tol=1e-3){
+sample_ellipse_beta <- function(x, nsim=100, tol=0, maxiter=5000){
+  d <- x$dim
+  nb  <- (d*(d+1)/2) + d + 1
   
   b <- rmvnorm(nsim, x$ols_fit$beta_est, x$ols_fit$varcov)
-  dev <-  abs(sqrt(rowSums(b^2))-1)
-  ok <- dev < tol
-  b <- b[ok,]
-  it <- 0
-  failed <- FALSE
-  while(length(b)/6<nsim){
-    b <- rbind(b, rmvnorm( 2*(nsim-length(b)/6), x$ols_fit$beta_est, x$ols_fit$varcov))
-    ok <- abs(sqrt(rowSums(b^2))-1) < tol
+  if(maxiter==0){ tol<-0; b <- b/sqrt(rowSums(b^2))}
+  if(tol>0){
+    dev <-  abs(sqrt(rowSums(b^2))-1)
+    ok <- dev < tol
     b <- b[ok,]
-    it<-it+1
-    if(it>5000) {it<-0; tol <- tol * 10; failed<-TRUE}
+    it <- 0
+    failed <- FALSE
+    while(length(b)/nb < nsim){
+      b <- rbind(b, rmvnorm( 2*(nsim-length(b)/nb), x$ols_fit$beta_est, x$ols_fit$varcov))
+      ok <- abs(sqrt(rowSums(b^2))-1) < tol
+      b <- b[ok,]
+      it<-it+1
+      if(it>maxiter) {it<-0; tol <- tol * 10; failed<-TRUE}
+    }
+    if(failed) warning(paste("beta sampling tolerance was increased to", tol))
+    b<-b[1:nsim,]
   }
-  if(failed) warning(paste("beta sampling tolerance was increased to", tol))
-  b[1:nsim,]
+  b
 }
 
 
@@ -398,7 +358,7 @@ ellipsoid_from_beta <- function(beta, d){
     f <- R %*% c(1,0)
     angles <- atan2(f[2],f[1])
   }else if(d==3){
-    angles <- rotationMatrix2EulerAngles(R)
+    angles <- NULL#rotationMatrix2EulerAngles(R)
   }
   
   # check if we got a valid fit

@@ -7,7 +7,7 @@
 
 # contrast for the axes being the same
 
-ellipse_contrast_2d <- function(els, out=FALSE){
+ellipse_contrast_2d <- function(els, out=TRUE){
   if(ncol(els[[1]]$A)==2){
     R <- lapply(lapply(els, getElement, "A"), ellipse_solve_rota)
     axes <- t(sapply(R, function(b) b$axes ))

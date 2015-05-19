@@ -4,7 +4,7 @@
 \title{Confidence interval for ellipsoid parameters using simulation}
 \usage{
 \method{confint}{ellipsoid}(x, fun, nsim = 1000, probs = c(0.025, 0.975),
-  tol = 1e-04, ...)
+  ...)
 }
 \arguments{
 \item{tol}{tolerance for absolute  deviation in the ||beta||=1 constraint.}
