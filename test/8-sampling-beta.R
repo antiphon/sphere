@@ -4,7 +4,7 @@ library(mvtnorm)
 load_all(".")
 
 
-v <- rellipsoid(axes = c(1,1.01), 100, noise=.1)
+v <- rellipsoid(axes = c(1,1.01,2), 100, noise=.1)
 x <- ellipsoid_OLS(v)
 
 b<-sample_ellipse_beta(x, 1000, tol = 1e-4)

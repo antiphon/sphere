@@ -7,7 +7,7 @@ library(mvtnorm)
 
 comp <- .7
 axis <- c(1, comp)
-x0 <- rellipsoid(50, axis, noise = 0.2 )
+x0 <- rellipsoid(50, axis, noise = 0.5 )
 ##########
 el <- ellipsoid_OLS(x0)
 
@@ -24,11 +24,11 @@ plot(el, lwd=3, col=3)
 
 
 # loop some time
- rr <- list()
-for(s2 in c(0.05, 0.1)){
-  rr[[paste0("s",s2)]] <- sapply(1:30, function(v) ellipsoid_OLS(rellipsoid(500, c(axis,1), noise=sqrt(s2)))$ols_fit$s2)
-}
-print(sapply(rr, summary))
+#  rr <- list()
+# for(s2 in c(0.05, 0.1)){
+#   rr[[paste0("s",s2)]] <- sapply(1:30, function(v) ellipsoid_OLS(rellipsoid(500, c(axis,1), noise=sqrt(s2)))$ols_fit$s2)
+# }
+# print(sapply(rr, summary))
 
 
 # Confidence intervals using simulation:
@@ -43,4 +43,6 @@ print(sapply(rr, summary))
 #   ab[1,]-ab[2,]
 # }
 # 
-# print(confint(el,f))
+ 
+system.time(print(confint(el, maxiter=0, ellipse_contrast_2d)))
+system.time(print(confint(el, maxiter=500, tol=1e-3, ellipse_contrast_2d)))
