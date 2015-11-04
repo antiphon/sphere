@@ -15,7 +15,7 @@
 #' @import rgl
 #' @export
 
-sphere.grid  <- function(N, lower=TRUE, ico=FALSE) {
+sphere.grid  <- function(N=2, lower=TRUE, ico=TRUE) {
   if(!ico){
     a1 <- seq(0, pi/2, length=N)
     ll <- NULL

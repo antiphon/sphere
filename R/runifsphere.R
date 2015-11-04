@@ -11,7 +11,7 @@ runifsphere <- function(n, spherical=FALSE){
   v <- runif(n)
   a <- u * 2 * pi
   i <- acos(2*v - 1)
-  ai<- cbind(azi=a,inc=i)
+  ai<- cbind(azi=a, inc=i)
   if(spherical) ai
   else ai2xyz(ai)
 }

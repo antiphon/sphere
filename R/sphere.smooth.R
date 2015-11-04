@@ -20,7 +20,7 @@ sphere.smooth <- function(latlon, v, N=3, s=.25){
   f <- sphere.predict(latlon, v, newlatlon, s=s)
   # assign to icosahedron vertices
   ico$vb <- t( t(ico$vb)/ico$vb[4,])
-  ico$data <- cbind(latlon, v)
+  ico$data <- if(missing(v)) latlon else cbind(latlon, v)
   ico$prediction <- f
   class(ico) <- c("spheresmooth", class(ico))
   ico

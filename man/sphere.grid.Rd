@@ -4,7 +4,7 @@
 \alias{sphere.grid}
 \title{generate grids on sphere}
 \usage{
-sphere.grid(N, lower = TRUE, ico = FALSE)
+sphere.grid(N = 2, lower = TRUE, ico = TRUE)
 }
 \arguments{
 \item{N}{number of refinenemts}

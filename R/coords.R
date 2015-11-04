@@ -281,6 +281,9 @@ Euler2rotationMatrix <- function(v, proper=TRUE){
 
 #' Rotation matrix to Euler angles
 #' 
+#' @return
+#' (Heading, Attitude, Bank)
+#' 
 #' @export
 rotationMatrix2EulerAngles <- function(R){ 
   quaternion2EulerAngles(rotationMatrix2quaternion(R))
