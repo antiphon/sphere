@@ -11,12 +11,12 @@
 #' @export 
 
 sphere.smooth <- function(latlon, v, N=3, s=.25){
-  #' the smoothing locations
+  # the smoothing locations
   ico <- icosahedron3d()
   for(i in 1:N) ico <- subdivision3d(ico)
   newxyz <- t(ico$vb[1:3,])/ico$vb[4,]
   newlatlon <- xyz2ll(newxyz)
-  #' predict
+  # predict
   f <- sphere.predict(latlon, v, newlatlon, s=s)
   # assign to icosahedron vertices
   ico$vb <- t( t(ico$vb)/ico$vb[4,])
@@ -28,7 +28,7 @@ sphere.smooth <- function(latlon, v, N=3, s=.25){
 
 
 #' plot the 3d sphere of predictions
-#' @exportMethod plot
+#' 
 #' @import rgl
 #' @export
 plot.spheresmooth <- function(obj, col=heat.colors, col_zlim, ..., data=FALSE) {

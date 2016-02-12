@@ -1,7 +1,7 @@
 #' distance on the surface of a sphere
 #' 
-#' @export
 #' @useDynLib sphere
+#' @export
 
 dist.sphere <- function(lat, lon, R=1, from, to, usec=TRUE){
   n <- length(lat)

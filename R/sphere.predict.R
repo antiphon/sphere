@@ -7,6 +7,7 @@
 #' @param s gaussian kernel sd
 #' 
 #' use xyz2ll or ai2ll to transform from unitvecs or (azimuth, inclination) (physical)
+#' 
 #' @export
 sphere.predict <- function(latlon, v, newlatlon, s=0.25) {
   int <- missing(v)

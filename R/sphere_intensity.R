@@ -11,10 +11,10 @@
 #' @export
 
 intensity.sphere <- function(latlon, s=0.25, nlat=20, newlatlon, plot=FALSE, points=FALSE, ...) {
-  #' gaussian kernel
+  # gaussian kernel
   kern <- function(r) dnorm(r, 0, s)
-  #'
-  #' aggregation points
+  #
+  # aggregation points
   if(missing(newlatlon)){ # create a grid
     lat <- seq(-pi/2, pi/2, length=nlat)
     lon <- seq(-pi, pi, length=2*nlat)

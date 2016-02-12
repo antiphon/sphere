@@ -1,4 +1,4 @@
-#' Test of uniformity on a sphere
+#' Test of uniformity of points on a sphere
 #' 
 #' Independent test of uniformity in azimuth and inclination.
 #' 
@@ -9,10 +9,10 @@
 
 #### test uniformity on a sphere
 test.unifsphere <- function(ai){
-  #' we must back transform so that we can test uniformity on a unit interval
+  # we must back transform so that we can test uniformity on a unit interval
   u <- ai[,1]/(2*pi)
   v <- (cos(ai[,2])+1)/2
-  #' then we test their uniformity
+  # then we test their uniformity
   bin_u <- hist(u, plot=FALSE)$counts
   bin_v <- hist(v, plot=FALSE)$counts
   pu <- test.chi2(bin_u)
@@ -22,6 +22,7 @@ test.unifsphere <- function(ai){
 
 
 #' Chi2 test for counts in equal size bins
+#' 
 #' @export
 test.chi2 <- function(x){
   k <- length(x) # bins

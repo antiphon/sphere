@@ -1,12 +1,15 @@
 Package: sphere
 Type: Package
-Title:  Some functions for handling 3D point cloud data and ellipsoids.
+Title: Some functions for handling 3D point cloud data and ellipsoids.
 Version: 1.5
 Date: 2015-05-19
 Author: Tuomas Rajala
 Maintainer: Tuomas Rajala <tuomas.rajala@iki.fi>
-Description: Functions for handling 3D data and ellipsoids (2d/3d): Spherical coordinate transformations,
- rotation representations, random sampling, ellipsoid fitting, various plotting, etc.
+Description: Functions for handling 3D data and ellipsoids (2d/3d): Spherical
+    coordinate transformations, rotation representations, random sampling, ellipsoid
+    fitting, various plotting, etc.
 License: GPL
-Depends: Rcpp
+Depends:
+    Rcpp
 LinkingTo: Rcpp
+RoxygenNote: 5.0.1
