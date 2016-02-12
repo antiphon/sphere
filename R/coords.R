@@ -8,6 +8,7 @@ xyz2globe <- function(xyz) {
 #' latlon to 3d coordinates
 #' @export
 ll2xyz <- function(latlon) {
+  latlon <- rbind(latlon)
   azi <- lon2azi(latlon[,2])
   inc <- lat2inc(latlon[,1])
   ai2xyz(cbind(azi,inc))
@@ -16,6 +17,7 @@ ll2xyz <- function(latlon) {
 #' (azi,incl) to 3d coordinates
 #' @export
 ai2xyz <- function(aziinc) {
+  aziinc <- rbind(aziinc)
   azi <- aziinc[,1]
   inc <- aziinc[,2]
   wx<-sin(inc)*cos(azi)
@@ -52,7 +54,7 @@ lon2azi <- function(lon){
 #' antipode lat and lon
 #' @export
 antipode <- function(latlon){
-  latlon<-cbind(latlon)
+  latlon<-rbind(latlon)
   cbind(-latlon[,1], latlon[,2]-sign(latlon[,2])*pi)
 }
 
