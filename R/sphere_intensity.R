@@ -31,7 +31,7 @@ intensity.sphere <- function(latlon, s=0.25, nlat=20, newlatlon, plot=FALSE, poi
   n<-nrow(latlon)
   m <- nrow(grid)
   
-  y <- sphere.smooth(latlon=latlon, newlatlon=grid, s=s)
+  y <- sphere.predict(latlon=latlon, newlatlon=grid, s=s)
   
   v <- if(isgrid) t(matrix(y, byrow=F, nrow=length(lat))) else y
   

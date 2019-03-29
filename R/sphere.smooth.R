@@ -10,7 +10,7 @@
 #' @import rgl
 #' @export 
 
-sphere.smooth <- function(latlon, v, N=3, s=.25){
+sphere.smooth <- function(latlon, v, newlatlon, N=3, s=.25){
   # the smoothing locations
   ico <- icosahedron3d()
   for(i in 1:N) ico <- subdivision3d(ico)

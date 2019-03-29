@@ -23,6 +23,8 @@ test.unifsphere <- function(ai){
 
 #' Chi2 test for counts in equal size bins
 #' 
+#' @x counts
+#' 
 #' @export
 test.chi2 <- function(x){
   k <- length(x) # bins
