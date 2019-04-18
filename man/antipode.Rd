@@ -9,4 +9,3 @@ antipode(latlon)
 \description{
 antipode lat and lon
 }
-

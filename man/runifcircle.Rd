@@ -17,4 +17,3 @@ Sample unit circle uniformly
 \details{
 Default is to return unit vectors.
 }
-

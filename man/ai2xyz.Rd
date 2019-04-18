@@ -9,4 +9,3 @@ ai2xyz(aziinc)
 \description{
 (azi,incl) to 3d coordinates
 }
-

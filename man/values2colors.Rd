@@ -4,7 +4,8 @@
 \alias{values2colors}
 \title{values to colors}
 \usage{
-values2colors(v, n = 100, zlim, col = heat.colors, na.col = "gray50", ...)
+values2colors(v, n = 100, zlim, col = heat.colors, na.col = "gray50",
+  ...)
 }
 \arguments{
 \item{v}{the values}
@@ -18,4 +19,3 @@ values2colors(v, n = 100, zlim, col = heat.colors, na.col = "gray50", ...)
 \description{
 values to colors
 }
-

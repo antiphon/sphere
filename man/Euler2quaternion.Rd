@@ -12,4 +12,3 @@ Euler2quaternion(euler)
 \description{
 Euler axis/angle to quaternion
 }
-

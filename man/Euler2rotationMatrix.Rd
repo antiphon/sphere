@@ -9,4 +9,3 @@ Euler2rotationMatrix(v, proper = TRUE)
 \description{
 Euler axis-angle to Rotation matrix
 }
-

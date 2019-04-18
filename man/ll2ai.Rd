@@ -9,4 +9,3 @@ ll2ai(latlon)
 \description{
 latlon to aziinc
 }
-

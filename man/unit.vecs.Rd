@@ -9,4 +9,3 @@ unit.vecs(...)
 \description{
 spherical unit vectors in xyz
 }
-

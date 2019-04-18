@@ -14,4 +14,3 @@ Convention: Euler is (Heading, Attitude, Bank) so that
 Heading = rotation  around y, Attitude = rotation around z, 
 Bank = rotation around x, in that order.
 }
-

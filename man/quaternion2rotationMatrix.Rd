@@ -9,4 +9,3 @@ quaternion2rotationMatrix(q)
 \description{
 Quaternion to rotation matrix
 }
-

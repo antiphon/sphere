@@ -4,8 +4,8 @@
 \alias{intensity.sphere}
 \title{intensity on a sphere}
 \usage{
-intensity.sphere(latlon, s = 0.25, nlat = 20, newlatlon, plot = FALSE,
-  points = FALSE, ...)
+intensity.sphere(latlon, s = 0.25, nlat = 20, newlatlon,
+  plot = FALSE, points = FALSE, ...)
 }
 \arguments{
 \item{latlon}{observations}
@@ -23,4 +23,3 @@ intensity.sphere(latlon, s = 0.25, nlat = 20, newlatlon, plot = FALSE,
 \description{
 Gaussian kernel
 }
-

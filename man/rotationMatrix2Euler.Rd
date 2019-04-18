@@ -9,4 +9,3 @@ rotationMatrix2Euler(R)
 \description{
 Rotation matrix (prop or improp) to Euler axis-angle
 }
-

@@ -9,4 +9,3 @@ aziinc2rotationMatrix(rot_ai = c(0, 0))
 \description{
 Rotation using azimuth-inclination.
 }
-

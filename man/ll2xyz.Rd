@@ -9,4 +9,3 @@ ll2xyz(latlon)
 \description{
 latlon to 3d coordinates
 }
-

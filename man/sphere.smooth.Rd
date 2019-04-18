@@ -4,7 +4,7 @@
 \alias{sphere.smooth}
 \title{Smoothed unit sphere values}
 \usage{
-sphere.smooth(latlon, v, N = 3, s = 0.25)
+sphere.smooth(latlon, v, newlatlon, N = 3, s = 0.25)
 }
 \arguments{
 \item{latlon}{latitude-longitude of data}
@@ -18,4 +18,3 @@ sphere.smooth(latlon, v, N = 3, s = 0.25)
 \description{
 Krige on a sphere, return a plottable orb.
 }
-

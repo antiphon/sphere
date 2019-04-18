@@ -9,4 +9,3 @@ lat2inc(lat)
 \description{
 latitude to inclination
 }
-

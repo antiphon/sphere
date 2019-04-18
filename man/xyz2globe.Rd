@@ -9,4 +9,3 @@ xyz2globe(xyz)
 \description{
 OLD for plotting on the globe, we need to trasform as the texture is fuckd up
 }
-

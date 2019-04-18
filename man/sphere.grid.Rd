@@ -25,4 +25,3 @@ Returns latitude-longitude matrix. use ll2xyz or ll2ai for transformation.}
 \description{
 generate grids on sphere
 }
-

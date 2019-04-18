@@ -9,4 +9,3 @@ dist.sphere(lat, lon, R = 1, from, to, usec = TRUE)
 \description{
 distance on the surface of a sphere
 }
-

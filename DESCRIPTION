@@ -1,8 +1,8 @@
 Package: sphere
 Type: Package
 Title: Some functions for handling 3D point cloud data and ellipsoids.
-Version: 1.6
-Date: 2019-03-29
+Version: 1.7
+Date: 2019-04-18
 Author: Tuomas Rajala
 Maintainer: Tuomas Rajala <tuomas.rajala@iki.fi>
 Description: Functions for handling 3D data and ellipsoids (2d/3d): Spherical

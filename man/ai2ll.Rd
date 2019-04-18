@@ -9,4 +9,3 @@ ai2ll(aziinc)
 \description{
 azi-inc to lat lon
 }
-

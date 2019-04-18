@@ -9,4 +9,3 @@ plane.smooth(xy, v, newxy, s = 0.25)
 \description{
 if no v is given, compute intensity.
 }
-

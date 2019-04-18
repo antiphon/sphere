@@ -9,4 +9,3 @@ dist.plane(x, y, from, to, usec = TRUE)
 \description{
 distance on the plane
 }
-

@@ -9,4 +9,3 @@ quaternion2Euler(q)
 \description{
 Quaternion to Euler axis/angle
 }
-

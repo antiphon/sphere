@@ -13,4 +13,3 @@ Default: 3-2-1 i.e. around z, then around y, then around x.}
 \description{
 Product of elementary rotation matrices
 }
-

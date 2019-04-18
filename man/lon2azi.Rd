@@ -9,4 +9,3 @@ lon2azi(lon)
 \description{
 longitude to azimuth
 }
-

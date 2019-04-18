@@ -20,4 +20,3 @@ use xyz2ll or ai2ll to transform from unitvecs or (azimuth, inclination) (physic
 \description{
 if no v is given, compute intensity.
 }
-

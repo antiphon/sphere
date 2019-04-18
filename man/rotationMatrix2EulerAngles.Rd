@@ -12,4 +12,3 @@ rotationMatrix2EulerAngles(R)
 \description{
 Rotation matrix to Euler angles
 }
-

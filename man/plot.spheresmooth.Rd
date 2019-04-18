@@ -10,4 +10,3 @@
 \description{
 plot the 3d sphere of predictions
 }
-

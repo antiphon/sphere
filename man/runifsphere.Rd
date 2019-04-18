@@ -17,4 +17,3 @@ Sample unit sphere uniformly
 \details{
 Default is to return unit vectors.
 }
-

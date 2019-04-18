@@ -9,4 +9,3 @@ EulerAngles2rotationMatrix(angle)
 \description{
 Euler angles to Rotation matrix
 }
-

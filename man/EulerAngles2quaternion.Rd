@@ -9,4 +9,3 @@ EulerAngles2quaternion(angle)
 \description{
 Euler angles to quaternions
 }
-

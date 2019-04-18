@@ -9,4 +9,3 @@ xyzrotate(xyz, ...)
 \description{
 rotate xyz coordinates
 }
-
