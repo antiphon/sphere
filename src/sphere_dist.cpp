@@ -19,7 +19,7 @@ NumericMatrix c_sphere_dist(NumericVector lat, NumericVector lon, IntegerVector 
       j = to[l]-1;
       dlat = fabs(lat[i]-lat[j]);
       dlon = fabs(lon[i]-lon[j]);
-      dlon = min(dlon, 2*PI-dlon); 
+      dlon = min(dlon, 2*M_PI-dlon); 
       a = pow(sin(dlat/2),2) + cos(lat[i])*cos(lat[j])*pow(sin(dlon/2),2);
       d = 2*asin(sqrt(a));
       //printf("[%f,%f,%f,%f]", dlat, dlon, a, d);

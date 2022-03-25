@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // c_plane_dist
 NumericMatrix c_plane_dist(NumericVector x, NumericVector y, IntegerVector from, IntegerVector to);
 RcppExport SEXP _sphere_c_plane_dist(SEXP xSEXP, SEXP ySEXP, SEXP fromSEXP, SEXP toSEXP) {
